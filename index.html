@@ -107,7 +107,8 @@
         }
 
         .download-button,
-        .print-button {
+        .print-button,
+        .clear-link {
             background: #ff69b4;
             color: white;
             border: none;
@@ -121,10 +122,26 @@
         }
 
         .download-button:hover,
-        .print-button:hover {
+        .print-button:hover,
+        .clear-link:hover {
             background: white;
             color: #ff69b4;
             border: 1px solid #ff69b4;
+        }
+
+        .clear-link {
+            background: transparent;
+            color: #007bff;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            display: inline-block;
+            margin-top: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .clear-link:hover {
+            color: #0056b3;
         }
 
         footer {
@@ -154,7 +171,8 @@
 
             .submit-button,
             .download-button,
-            .print-button {
+            .print-button,
+            .clear-link {
                 width: 100%;
             }
 
@@ -189,7 +207,8 @@
 
             .submit-button,
             .download-button,
-            .print-button {
+            .print-button,
+            .clear-link {
                 display: none;
             }
         }
@@ -211,12 +230,16 @@
                 <div class="hint">i.e Chocolate, Carrot or any choice</div>
             </div>
             <div class="poem" id="poem"></div>
+
+            <!-- Clear Recipe text link centered above Download button -->
+            <a href="#" class="clear-link" onclick="clearRecipe()">Clear Recipe</a>
+
+            <!-- Download and Print buttons -->
             <button class="download-button" id="downloadBtn" onclick="downloadPDF()">Download Recipe as PDF</button>
             <button class="print-button" onclick="window.print()">Print Recipe</button>
         </main>
         <footer>
-            This was coded by Thandi Sithole.
-                
+            This was coded by <a href="https://www.cokejobe@gmail.com" target="_blank">Thandi Sithole</a>
                 
         </footer>
     </div>
@@ -268,6 +291,13 @@
             }
 
             doc.save("cake-recipe.pdf");
+        }
+
+        function clearRecipe() {
+            // Clear the input field
+            document.getElementById("user-instructions").value = "";
+            // Clear the generated recipe display area
+            document.getElementById("poem").innerHTML = "";
         }
 
         const poemFormElement = document.getElementById("generator-form");
