@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <title>Cake Flavour AI Generator</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #ffe6f0, #fff0f5);
+            color: #4a3b4d;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: #fff0f5;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 10px 30px rgba(255, 182, 193, 0.3);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            color: #d63384;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0px 10px 30px rgba(220, 20, 60, 0.08);
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .enter-info {
+            padding: 14px;
+            border: 1px solid #d63384;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            color: #4a3b4d;
+            width: 80%;
+            margin-bottom: 20px;
+            transition: border 0.3s ease;
+        }
+
+        .enter-info:focus {
+            border-color: #ff69b4;
+            outline: none;
+        }
+
+        .submit-button {
+            background: #d63384;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 80%;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .submit-button:hover {
+            background: #fff;
+            color: #d63384;
+            border: 1px solid #d63384;
+        }
+
+        .poem {
+            background-color: #fff;
+            padding: 20px;
+            line-height: 1.8;
+            border-left: 4px solid #d63384;
+            box-shadow: 0px 10px 30px rgba(220, 20, 60, 0.08);
+            margin-top: 20px;
+            margin-bottom: 20px;
+            white-space: pre-wrap;
+            font-size: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .download-button,
+        .print-button {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 80%;
+            margin-top: 10px;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        .download-button:hover,
+        .print-button:hover {
+            background: white;
+            color: #ff69b4;
+            border: 1px solid #ff69b4;
+        }
+
+        footer {
+            margin-top: 40px;
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        footer a {
+            color: #d63384;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .enter-info {
+                width: 100%;
+            }
+
+            .submit-button,
+            .download-button,
+            .print-button {
+                width: 100%;
+            }
+
+            .poem {
+                max-height: 250px;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                margin: 0;
+                padding: 20px;
+            }
+
+            .container {
+                box-shadow: none;
+                width: 100%;
+                padding: 0;
+            }
+
+            header h1 {
+                font-size: 2rem;
+            }
+
+            .poem {
+                max-height: none;
+                overflow: visible;
+                font-size: 1.1rem;
+            }
+
+            .submit-button,
+            .download-button,
+            .print-button {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h1>🎂 AI Cake Flavour Generator 🎂</h1>
+        </header>
+        <main>
+            <div class="form-container">
+                <form id="generator-form">
+                    <input type="text" placeholder="Enter the Cake Flavour" autofocus required autocomplete="off"
+                        class="enter-info" id="user-instructions" />
+                    <input type="submit" class="submit-button" value="Generate Recipe" />
+                </form>
+                <div class="hint">i.e Chocolate, Carrot or any choice</div>
+            </div>
+            <div class="poem" id="poem"></div>
+            <button class="download-button" id="downloadBtn" onclick="downloadPDF()">Download Recipe as PDF</button>
+            <button class="print-button" onclick="window.print()">Print Recipe</button>
+        </main>
+        <footer>
+            This was coded by Thandi Sithole.
+                
+                
+        </footer>
+    </div>
+
+    <script>
+        function displayPoem(response) {
+            const poemElement = document.getElementById("poem");
+            poemElement.innerHTML = response.data.answer.replace(/<br\s*\/?>/gi, "\n");
+        }
+
+        function generatePoem(event) {
+            event.preventDefault();
+
+            const instructionsInput = document.getElementById("user-instructions");
+            const apiKey = "9te2009b94ad39f916306f09bc5do169";
+            const context = "you are a cakes baker expert and love to bake. your mission is to generate cake recipes of each cake and separate each line with a <br />. Make sure to follow the user instructions";
+            const prompt = `user instructions: Generate a cake recipe about ${instructionsInput.value}`;
+            const apiUrl = `https://api.shecodes.io/ai/v1/generate?prompt=${prompt}&context=${context}&key=${apiKey}`;
+
+            const poemElement = document.getElementById("poem");
+            poemElement.innerHTML = `⏳ Generating a Cake Recipe about ${instructionsInput.value}...`;
+
+            axios.get(apiUrl).then(displayPoem);
+        }
+
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF({ orientation: "portrait", unit: "pt", format: "a4" });
+
+            const poemText = document.getElementById("poem").innerText;
+            const lines = doc.splitTextToSize(poemText, 500);
+            let verticalPosition = 60;  // Starting position for text
+            const margin = 40; // Left margin
+            const pageHeight = doc.internal.pageSize.height;
+
+            // Loop through the lines of text and ensure they fit onto the pages
+            for (let i = 0; i < lines.length; i++) {
+                // If verticalPosition goes beyond the page height, add a new page
+                if (verticalPosition + 20 > pageHeight) {
+                    doc.addPage();
+                    verticalPosition = 40; // Reset to top of the page after adding a new page
+                }
+
+                // Add the line of text at the current vertical position
+                doc.text(lines[i], margin, verticalPosition);
+
+                // Move down to the next line for the next text
+                verticalPosition += 20;
+            }
+
+            doc.save("cake-recipe.pdf");
+        }
+
+        const poemFormElement = document.getElementById("generator-form");
+        poemFormElement.addEventListener("submit", generatePoem);
+    </script>
+</body>
+
+</html>
